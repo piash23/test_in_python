@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from employee import Employee
 
 
@@ -22,6 +23,23 @@ class TestEmployee(unittest.TestCase):
         self.assertEqual(self.emp_1.pay, 52500)
         self.emp_2.apply_raise()
         self.assertEqual(self.emp_2.pay, 63000)
+
+    def test_monthly_schedule_success(self):
+        with patch('employee.requests.get') as mock_get:
+            mock_get.return_value.ok = True
+            mock_get.return_value.text = "Monthly Schedule Data"
+
+            result = self.emp_1.monthly_schedule("January")
+            self.assertEqual(result, "Monthly Schedule Data")
+            mock_get.assert_called_with("http://company.com/John/Doe/January")
+
+    def test_monthly_schedule_failure(self):
+        with patch('employee.requests.get') as mock_get:
+            mock_get.return_value.ok = False
+
+            result = self.emp_1.monthly_schedule("March")
+            self.assertEqual(result, "Bad Response!")
+            mock_get.assert_called_with("http://company.com/John/Doe/March")
 
     @classmethod
     def tearDownClass(cls):
