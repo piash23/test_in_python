@@ -4,9 +4,10 @@ from employee import Employee
 
 class TestEmployee(unittest.TestCase):
 
-    def setUp(self):
-        self.emp_1 = Employee("John", "Doe", 50000)
-        self.emp_2 = Employee("Jane", "Smith", 60000)
+    @classmethod
+    def setUpClass(cls):
+        cls.emp_1 = Employee("John", "Doe", 50000)
+        cls.emp_2 = Employee("Jane", "Smith", 60000)
 
     def test_email(self):
         self.assertEqual(self.emp_1.email, "john.doe@company.com")
@@ -22,7 +23,8 @@ class TestEmployee(unittest.TestCase):
         self.emp_2.apply_raise()
         self.assertEqual(self.emp_2.pay, 63000)
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         print("Cleaning up after tests...")
 
 
